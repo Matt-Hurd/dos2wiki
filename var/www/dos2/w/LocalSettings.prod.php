@@ -10,17 +10,17 @@
 # Further documentation for configuration settings may be found at:
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
 
-require "/var/www/bg3/.secrets.php";
+require "/var/www/dos2/.secrets.php";
 
 # Protect against web entry
 if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-$serverName = ($_SERVER['SERVER_NAME'] ?? "bg3.wiki");
+$serverName = ($_SERVER['SERVER_NAME'] ?? "dos2.wiki");
 
-$wgSitename = "bg3.wiki";
-$wgMetaNamespace = "bg3wiki";
+$wgSitename = "dos2.wiki";
+$wgMetaNamespace = "dos2wiki";
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
@@ -49,8 +49,8 @@ $wgLogos = [
 $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 
-$wgEmergencyContact = "bg3communitywiki@gmail.com";
-$wgPasswordSender = "bg3communitywiki@gmail.com";
+$wgEmergencyContact = "admin@dos2.wiki";
+$wgPasswordSender = "no-reply@dos2.wiki";
 
 $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
@@ -59,8 +59,8 @@ $wgEmailAuthentication = true;
 ## Database settings
 $wgDBtype = "mysql";
 $wgDBserver = "localhost";
-$wgDBname = "bg3wiki";
-$wgDBuser = "bg3wiki";
+$wgDBname = "dos2wiki";
+$wgDBuser = "dos2wiki";
 #$wgDBpassword = "(set in secrets.php)";
 
 # MySQL specific settings
@@ -125,7 +125,7 @@ $wgAuthenticationTokenVersion = "1";
 ## For attaching licensing metadata to pages, and displaying an
 ## appropriate copyright notice / icon. GNU Free Documentation
 ## License and Creative Commons licenses are supported so far.
-$wgRightsPage = "bg3wiki:Copyrights";
+$wgRightsPage = "dos2wiki:Copyrights";
 $wgRightsUrl = "";
 $wgRightsText = "CC BY-NC-SA 4.0 or CC BY-SA 4.0";
 $wgRightsIcon = null;
@@ -250,7 +250,7 @@ $wgHooks['SkinAddFooterLinks'][] = function( $skin, $key, &$links ) {
 		return;
 	}
 	$links['copyright'] = Html::rawElement( 'a',
-		[ 'href' => '/wiki/bg3wiki:Copyrights' ],
+		[ 'href' => '/wiki/dos2wiki:Copyrights' ],
 		'Copyrights'
 	);
 };
@@ -259,19 +259,19 @@ $wgHooks['SkinAddFooterLinks'][] = function( $skin, $key, &$links ) {
 # Advertisement
 #
 
-function bg3wikiAdsEnabled( OutputPage $out ) {
+function dos2wikiAdsEnabled( OutputPage $out ) {
 	$user = $out->getUser();
 	if ( $user->isRegistered() ) {
 		return false;
 	}
 	$ns = $out->getTitle()->getNamespace();
-	if ( !bg3wikiAdsEnabledNs($ns) ) {
+	if ( !dos2wikiAdsEnabledNs($ns) ) {
 		return false;
 	}
 	return true;
 }
 
-function bg3wikiAdsEnabledNs( $ns ) {
+function dos2wikiAdsEnabledNs( $ns ) {
 	switch ( $ns ) {
 		case NS_MAIN:
 		case NS_FILE:
@@ -286,7 +286,7 @@ function bg3wikiAdsEnabledNs( $ns ) {
 
 # Add CSS class to body depending on whether ads should be enabled
 $wgHooks['OutputPageBodyAttributes'][] = function( $out, $skin, &$attrs ) {
-	if ( bg3wikiAdsEnabled( $out ) ) {
+	if ( dos2wikiAdsEnabled( $out ) ) {
 		$attrs['class'] .= ' mw-ads-enabled mw-ads-ramp';
 	} else {
 		$attrs['class'] .= ' mw-ads-disabled';
@@ -307,24 +307,24 @@ $wgHooks['OutputPageBodyAttributes'][] = function( $out, $skin, &$attrs ) {
 #
 
 $wgHooks['SiteNoticeAfter'][] = function( &$html, $skin ) {
-	if ( !bg3wikiAdsEnabled( $skin->getOutput() ) ) {
+	if ( !dos2wikiAdsEnabled( $skin->getOutput() ) ) {
 		return;
 	}
 	if ( $skin->getSkinName() !== "vector" ) {
 		return;
 	}
 	# To re-enable publift ads, put this under the ramp one:
-	# <div id='bg3wiki-header-ad-fuse' data-fuse='23198268145'></div>
+	# <div id='dos2wiki-header-ad-fuse' data-fuse='23198268145'></div>
 	$html .= <<< EOF
-	  <div id='bg3wiki-header-ad'>
+	  <div id='dos2wiki-header-ad'>
 	    <p>Ad placeholder</p>
-	    <div id='bg3wiki-header-ad-ramp'></div>
+	    <div id='dos2wiki-header-ad-ramp'></div>
 	  </div>
 	EOF;
 };
 
 $wgHooks['SkinAfterPortlet'][] = function( $skin, $portletName, &$html ) {
-	if ( !bg3wikiAdsEnabled( $skin->getOutput() ) ) {
+	if ( !dos2wikiAdsEnabled( $skin->getOutput() ) ) {
 		return;
 	}
 	if ( $skin->getSkinName() !== "vector" ) {
@@ -334,40 +334,40 @@ $wgHooks['SkinAfterPortlet'][] = function( $skin, $portletName, &$html ) {
 		return;
 	}
 	# To re-enable publift ads, put this under the ramp one:
-	# <div id='bg3wiki-sidebar-ad-fuse' data-fuse='23198268148'></div>
+	# <div id='dos2wiki-sidebar-ad-fuse' data-fuse='23198268148'></div>
 	$html .= <<< EOF
-	  <div id='bg3wiki-sidebar-ad'>
+	  <div id='dos2wiki-sidebar-ad'>
 	    <p>Ad placeholder</p>
-	    <div id='bg3wiki-sidebar-ad-ramp'></div>
+	    <div id='dos2wiki-sidebar-ad-ramp'></div>
 	  </div>
-	  <p id='bg3wiki-ad-provider-notice'></p>
+	  <p id='dos2wiki-ad-provider-notice'></p>
 	EOF;
 };
 
 $wgHooks['SkinAfterContent'][] = function( &$html, $skin ) {
-	if ( !bg3wikiAdsEnabled( $skin->getOutput() ) ) {
+	if ( !dos2wikiAdsEnabled( $skin->getOutput() ) ) {
 		return;
 	}
 	if ( $skin->getSkinName() !== "citizen" ) {
 		return;
 	}
-	$html .= "<p id='bg3wiki-ad-provider-notice'></p>";
+	$html .= "<p id='dos2wiki-ad-provider-notice'></p>";
 
 };
 
 $wgHooks['SkinAfterBottomScripts'][] = function( $skin, &$html ) {
-	if ( !bg3wikiAdsEnabled( $skin->getOutput() ) ) {
+	if ( !dos2wikiAdsEnabled( $skin->getOutput() ) ) {
 		return;
 	}
 	if ( $skin->getSkinName() !== "citizen" ) {
 		return;
 	}
 	# To re-enable publift ads, put this under the ramp one:
-	# <div id='bg3wiki-footer-ad-fuse'></div>
+	# <div id='dos2wiki-footer-ad-fuse'></div>
 	$html .= <<< EOF
-	  <div id='bg3wiki-footer-ad'>
+	  <div id='dos2wiki-footer-ad'>
 	    <p>Ad placeholder</p>
-	    <div id='bg3wiki-footer-ad-ramp'></div>
+	    <div id='dos2wiki-footer-ad-ramp'></div>
 	  </div>
 	EOF;
 
@@ -376,7 +376,7 @@ $wgHooks['SkinAfterBottomScripts'][] = function( $skin, &$html ) {
 $wgHooks['SkinAfterBottomScripts'][] = function( $skin, &$html )
 	use ( $devSite )
 {
-	if ( !bg3wikiAdsEnabled( $skin->getOutput() ) ) {
+	if ( !dos2wikiAdsEnabled( $skin->getOutput() ) ) {
 		return;
 	}
 	$src = $devSite ? '/js/ads.dev.js' : '/js/ads.prod.js';
@@ -436,7 +436,7 @@ $wgNamespaceAliases = [
 
 #$wgReadOnly = 'Server transfer in progress; please save your changes in a text file and try again later.';
 
-# Serve Main_Page as https://bg3.wiki/
+# Serve Main_Page as https://dos2.wiki/
 $wgMainPageIsDomainRoot = true;
 
 # Add rel="canonical" link tags
@@ -478,8 +478,8 @@ $wgTidyConfig = [
 
 $wgHooks['ParserAfterTidy'][] = function( $parser, &$text ) {
 	$text = preg_replace( '/<(div|p) class="mw-empty-elt">\s*<\/\1>/', '', $text );
-	$text = preg_replace( '/<p>\s*<span class="bg3wiki-hidden-code"><\/span>\s*<\/p>/', '', $text );
-	$text = preg_replace( '/<span class="bg3wiki-hidden-code"><\/span>/', '', $text );
+	$text = preg_replace( '/<p>\s*<span class="dos2wiki-hidden-code"><\/span>\s*<\/p>/', '', $text );
+	$text = preg_replace( '/<span class="dos2wiki-hidden-code"><\/span>/', '', $text );
 };
 
 #
@@ -548,9 +548,9 @@ $wgNoFollowLinks = false;
 
 $wgSMTP = [
 	'host' => 'ssl://smtp.gmail.com',
-	'IDHost' => 'bg3.wiki',
+	'IDHost' => 'dos2.wiki',
 	'port' => 465,
-	'username' => 'bg3communitywiki@gmail.com',
+	'username' => 'no-reply@dos2.wiki',
 	'password' => $gmailAppPassword,
 	'auth' => true
 ];
@@ -677,8 +677,8 @@ $wgCaptchaTriggers['badlogin']      = true;
 
 $wgCargoDBtype = "mysql";
 $wgCargoDBserver = "localhost";
-$wgCargoDBname = "bg3wiki_cargo";
-$wgCargoDBuser = "bg3wiki_cargo";
+$wgCargoDBname = "dos2wiki_cargo";
+$wgCargoDBuser = "dos2wiki_cargo";
 $wgCargoMaxQueryLimit = 5000;
 #$wgCargoDBpassword = "(set in secrets.php)";
 
@@ -911,7 +911,7 @@ $wgGoogleSiteVerificationKey = 'AFZzz9W5H3CmDLSRstrLBj7jyuQqJCrOwX1IS01k1MA';
 $wgWikiSeoOverwritePageImage = true;
 
 $wgTwitterCardType = 'summary';
-$wgTwitterSiteHandle = "@bg3_wiki";
+$wgTwitterSiteHandle = "@dos2_wiki";
 
 ########################
 #                      #

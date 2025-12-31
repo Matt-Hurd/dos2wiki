@@ -2,7 +2,7 @@
 
 set -e
 
-MW_PATH=/var/www/bg3/w
+MW_PATH=/var/www/dos2/w
 
 if [ "$(pwd)" != "$MW_PATH" ]
 then

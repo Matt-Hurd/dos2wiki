@@ -1,7 +1,7 @@
 <?php
-require "/var/www/bg3/.secrets.php";
+require "/var/www/dos2/.secrets.php";
 
-$devSite = (($_COOKIE['bg3wiki_dev'] ?? '') === $devModePwd);
+$devSite = (($_COOKIE['dos2wiki_dev'] ?? '') === $devModePwd);
 
 if ( $devSite ) {
 	require 'LocalSettings.dev.php';

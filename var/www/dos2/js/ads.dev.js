@@ -40,7 +40,7 @@ function enableAds() {
 	*/
 	let provider = 'playwire';
 
-	const notice = document.getElementById('bg3wiki-ad-provider-notice');
+	const notice = document.getElementById('dos2wiki-ad-provider-notice');
 	if (notice) {
 		notice.innerText = 'Ads provided by: ' + provider;
 	}
@@ -115,7 +115,7 @@ async function rampSetup() {
 		}
 		await ramp.addUnits({
 			type: footerType,
-			selectorId: 'bg3wiki-footer-ad-ramp',
+			selectorId: 'dos2wiki-footer-ad-ramp',
 		});
 		await ramp.displayUnits();
 	}
@@ -161,8 +161,8 @@ function fuseSetup() {
 	addEventListener('resize', debouncedOnResize);
 
 	function replaceFooterAdZone() {
-		const outerDivId = 'bg3wiki-footer-ad';
-		const innerDivId = 'bg3wiki-footer-ad-fuse';
+		const outerDivId = 'dos2wiki-footer-ad';
+		const innerDivId = 'dos2wiki-footer-ad-fuse';
 
 		const outerDiv = document.getElementById(outerDivId);
 		const innerDiv = document.getElementById(innerDivId);

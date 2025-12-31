@@ -37,7 +37,7 @@ function enableAds() {
 	};
 	document.body.appendChild(script);
 
-	const notice = document.getElementById('bg3wiki-ad-provider-notice');
+	const notice = document.getElementById('dos2wiki-ad-provider-notice');
 	if (notice) {
 		notice.innerText = 'Ads provided by: playwire';
 	}
@@ -88,7 +88,7 @@ async function rampSetup() {
 		}
 		await ramp.addUnits({
 			type: footerType,
-			selectorId: 'bg3wiki-footer-ad-ramp',
+			selectorId: 'dos2wiki-footer-ad-ramp',
 		});
 		await ramp.displayUnits();
 	}

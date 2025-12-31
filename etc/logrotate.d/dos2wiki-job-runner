@@ -1,4 +1,4 @@
-/var/log/bg3wiki-job-runner.log {
+/var/log/dos2wiki-job-runner.log {
     daily
     notifempty
     missingok
@@ -6,9 +6,9 @@
     compress
     delaycompress
     prerotate
-        systemctl stop bg3wiki-job-runner
+        systemctl stop dos2wiki-job-runner
     endscript
     postrotate
-        systemctl start bg3wiki-job-runner
+        systemctl start dos2wiki-job-runner
     endscript
 }

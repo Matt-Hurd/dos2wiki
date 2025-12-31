@@ -1,23 +1,23 @@
 # Easily toggle logging on/off here
-map "" $bg3_log {
+map "" $dev_dos2_log {
 	default 0;
 }
 
 server {
 	listen 443 ssl;
-	server_name bg3.wiki;
+	server_name dev.dos2.wiki;
 
-	ssl_certificate     /etc/letsencrypt/live/bg3.wiki/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/bg3.wiki/privkey.pem;
+	ssl_certificate     /etc/letsencrypt/live/dos2.wiki/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/dos2.wiki/privkey.pem;
 
-	access_log /var/log/nginx/bg3wiki-access.log combined if=$bg3_log;
-	access_log /var/log/nginx/bg3wiki-cache.log mwfc_stats if=$mwfc_log;
-	access_log /var/log/nginx/bg3wiki-pages.log wiki_page if=$wiki_page;
-	error_log /var/log/nginx/bg3wiki-error.log;
+	access_log /var/log/nginx/dev-dos2wiki-access.log combined if=$dev_dos2_log;
+	access_log /var/log/nginx/dev-dos2wiki-cache.log mwfc_stats if=$mwfc_log;
+	access_log /var/log/nginx/dev-dos2wiki-pages.log wiki_page if=$wiki_page;
+	error_log /var/log/nginx/dev-dos2wiki-error.log;
 
 	log_not_found off;
 
-	root /var/www/bg3;
+	root /var/www/dos2;
 
 	#include headers/default;
 	#include headers/unsafe-csp;
@@ -69,18 +69,18 @@ server {
 
 	# Custom CSS and JS code
 	location ~ ^/(css|js)/ {
-		include headers/cache-5min;
+		# No cache on dev subdomain
 	}
 
 	# Custom PHP scripts
 	location /php/ {
-		include snippets/run-php-mwfc;
+		include snippets/run-php-direct;
 	}
 
 	# Root URL is main page
 	location = / {
 		fastcgi_index w/index.php;
-		include snippets/run-php-mwfc;
+		include snippets/run-php-direct;
 	}
 
 	location = /wiki/Main_Page {
@@ -89,7 +89,7 @@ server {
 
 	# Location for wiki's entry points
 	location ~ ^/w/(index|load|api|thumb|opensearch_desc|rest)\.php$ {
-		include snippets/run-php-mwfc;
+		include snippets/run-php-direct;
 	}
 
 	# Block Discord's broken page preview tool
@@ -97,7 +97,7 @@ server {
 		if ($http_user_agent ~ "Discordbot") {
 			return 403;
 		}
-		include snippets/run-php-mwfc;
+		include snippets/run-php-direct;
 	}
 
 	# Images
@@ -138,63 +138,4 @@ server {
 	location / {
 		return 404;
 	}
-}
-
-# On port 80, handle LetsEncrypt requests, otherwise redirect to HTTPS.
-server {
-	listen 80;
-	server_name bg3.wiki www.bg3.wiki;
-
-	access_log /var/log/nginx/bg3wiki-redir.log combined if=$bg3_log;
-	error_log /var/log/nginx/bg3wiki-error.log;
-
-	include snippets/letsencrypt;
-
-	location / {
-		return 301 https://bg3.wiki$request_uri;
-	}
-}
-
-# Same for dev subdomain.
-server {
-	listen 80;
-	server_name dev.bg3.wiki;
-
-	access_log /var/log/nginx/dev-bg3wiki-redir.log combined;
-	error_log /var/log/nginx/dev-bg3wiki-error.log;
-
-	include snippets/letsencrypt;
-
-	location / {
-		return 301 https://dev.bg3.wiki$request_uri;
-	}
-}
-
-# And new subdomain.
-server {
-	listen 80;
-	server_name new.bg3.wiki;
-
-	access_log /var/log/nginx/new-bg3wiki-redir.log combined;
-	error_log /var/log/nginx/new-bg3wiki-error.log;
-
-	include snippets/letsencrypt;
-
-	location / {
-		return 301 https://new.bg3.wiki$request_uri;
-	}
-}
-
-# Redirect erroneous www. subdomain requests to main domain.
-server {
-	listen 443 ssl;
-	server_name www.bg3.wiki;
-
-	ssl_certificate     /etc/letsencrypt/live/bg3.wiki/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/bg3.wiki/privkey.pem;
-
-	access_log /var/log/nginx/bg3wiki-redir.log combined if=$bg3_log;
-	error_log /var/log/nginx/bg3wiki-error.log;
-
-	return 301 https://bg3.wiki$request_uri;
 }

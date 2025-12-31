@@ -1,18 +1,23 @@
+# Easily toggle logging on/off here
+map "" $dos2_log {
+	default 0;
+}
+
 server {
 	listen 443 ssl;
-	server_name new.bg3.wiki;
+	server_name dos2.wiki;
 
-	ssl_certificate     /etc/letsencrypt/live/bg3.wiki/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/bg3.wiki/privkey.pem;
+	ssl_certificate     /etc/letsencrypt/live/dos2.wiki/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/dos2.wiki/privkey.pem;
 
-	access_log /var/log/nginx/bg3wiki-access.log combined if=$bg3_log;
-	access_log /var/log/nginx/bg3wiki-cache.log mwfc_stats if=$mwfc_log;
-	access_log /var/log/nginx/bg3wiki-pages.log wiki_page if=$wiki_page;
-	error_log /var/log/nginx/bg3wiki-error.log;
+	access_log /var/log/nginx/dos2wiki-access.log combined if=$dos2_log;
+	access_log /var/log/nginx/dos2wiki-cache.log mwfc_stats if=$mwfc_log;
+	access_log /var/log/nginx/dos2wiki-pages.log wiki_page if=$wiki_page;
+	error_log /var/log/nginx/dos2wiki-error.log;
 
 	log_not_found off;
 
-	root /var/www/bg3;
+	root /var/www/dos2;
 
 	#include headers/default;
 	#include headers/unsafe-csp;
@@ -133,4 +138,63 @@ server {
 	location / {
 		return 404;
 	}
+}
+
+# On port 80, handle LetsEncrypt requests, otherwise redirect to HTTPS.
+server {
+	listen 80;
+	server_name dos2.wiki www.dos2.wiki;
+
+	access_log /var/log/nginx/dos2wiki-redir.log combined if=$dos2_log;
+	error_log /var/log/nginx/dos2wiki-error.log;
+
+	include snippets/letsencrypt;
+
+	location / {
+		return 301 https://dos2.wiki$request_uri;
+	}
+}
+
+# Same for dev subdomain.
+server {
+	listen 80;
+	server_name dev.dos2.wiki;
+
+	access_log /var/log/nginx/dev-dos2wiki-redir.log combined;
+	error_log /var/log/nginx/dev-dos2wiki-error.log;
+
+	include snippets/letsencrypt;
+
+	location / {
+		return 301 https://dev.dos2.wiki$request_uri;
+	}
+}
+
+# And new subdomain.
+server {
+	listen 80;
+	server_name new.dos2.wiki;
+
+	access_log /var/log/nginx/new-dos2wiki-redir.log combined;
+	error_log /var/log/nginx/new-dos2wiki-error.log;
+
+	include snippets/letsencrypt;
+
+	location / {
+		return 301 https://new.dos2.wiki$request_uri;
+	}
+}
+
+# Redirect erroneous www. subdomain requests to main domain.
+server {
+	listen 443 ssl;
+	server_name www.dos2.wiki;
+
+	ssl_certificate     /etc/letsencrypt/live/dos2.wiki/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/dos2.wiki/privkey.pem;
+
+	access_log /var/log/nginx/dos2wiki-redir.log combined if=$dos2_log;
+	error_log /var/log/nginx/dos2wiki-error.log;
+
+	return 301 https://dos2.wiki$request_uri;
 }

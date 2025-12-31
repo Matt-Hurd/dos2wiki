@@ -1,6 +1,6 @@
 [Unit]
 
-Description = BG3 Wiki Job Runner
+Description = DOS2 Wiki Job Runner
 
 After = mariadb.service
 After = php8.4-fpm.service
@@ -14,7 +14,7 @@ StartLimitIntervalSec = 1s
 
 User = www-data
 ProtectSystem = full
-WorkingDirectory = /var/www/bg3/w
+WorkingDirectory = /var/www/dos2/w
 
 # We don't want it to restart on OOM.
 Restart = on-success
@@ -35,8 +35,8 @@ MemoryHigh = 1G
 
 Nice = 10
 
-StandardOutput = append:/var/log/bg3wiki-job-runner.log
-StandardError = append:/var/log/bg3wiki-job-runner.log
+StandardOutput = append:/var/log/dos2wiki-job-runner.log
+StandardError = append:/var/log/dos2wiki-job-runner.log
 
 [Install]
 

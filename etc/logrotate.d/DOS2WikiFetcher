@@ -1,4 +1,4 @@
-/var/log/BG3WikiFetcher.log {
+/var/log/DOS2WikiFetcher.log {
     daily
     notifempty
     missingok
@@ -6,9 +6,9 @@
     compress
     delaycompress
     prerotate
-        systemctl stop BG3WikiFetcher
+        systemctl stop DOS2WikiFetcher
     endscript
     postrotate
-        systemctl start BG3WikiFetcher
+        systemctl start DOS2WikiFetcher
     endscript
 }
