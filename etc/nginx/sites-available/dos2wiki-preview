@@ -3,6 +3,14 @@ map "" $preview_dos2_log {
 	default 0;
 }
 
+map "" $mwfc_log {
+	default 0;
+}
+
+map "" $wiki_page {
+	default 1;
+}
+
 server {
 	listen 443 ssl;
 	server_name preview.dos2.wiki;
@@ -35,9 +43,9 @@ server {
 	### END LibreSpeed ###
 
 	# ads.txt from Playwire
-	<!-- location = /ads.txt {
-		return 307 https://config.playwire.com/dyn_ads/1025372/75208/ads.txt;
-	} -->
+	# location = /ads.txt {
+	#	return 307 https://config.playwire.com/dyn_ads/1025372/75208/ads.txt;
+	#}
 
 	# No cache for robots, sitemaps
 	location ~ ^/(robots|sitemap) {
