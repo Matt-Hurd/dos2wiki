@@ -1,19 +1,19 @@
 # Easily toggle logging on/off here
-map "" $dev_dos2_log {
+map "" $preview_dos2_log {
 	default 0;
 }
 
 server {
 	listen 443 ssl;
-	server_name dev.dos2.wiki;
+	server_name preview.dos2.wiki;
 
 	ssl_certificate     /etc/letsencrypt/live/dos2.wiki/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/dos2.wiki/privkey.pem;
 
-	access_log /var/log/nginx/dev-dos2wiki-access.log combined if=$dev_dos2_log;
-	access_log /var/log/nginx/dev-dos2wiki-cache.log mwfc_stats if=$mwfc_log;
-	access_log /var/log/nginx/dev-dos2wiki-pages.log wiki_page if=$wiki_page;
-	error_log /var/log/nginx/dev-dos2wiki-error.log;
+	access_log /var/log/nginx/preview-dos2wiki-access.log combined if=$preview_dos2_log;
+	access_log /var/log/nginx/preview-dos2wiki-cache.log mwfc_stats if=$mwfc_log;
+	access_log /var/log/nginx/preview-dos2wiki-pages.log wiki_page if=$wiki_page;
+	error_log /var/log/nginx/preview-dos2wiki-error.log;
 
 	log_not_found off;
 
@@ -34,29 +34,10 @@ server {
 
 	### END LibreSpeed ###
 
-	### Payment ###
-
-	location /payment {
-	}
-
-	location /payment/requests {
-		return 403;
-	}
-
-	location /payment/riddle/clients {
-		return 403;
-	}
-
-	location ~ ^/payment/.*\.php$ {
-		include snippets/run-php-direct;
-	}
-
-	### END Payment ###
-
 	# ads.txt from Playwire
-	location = /ads.txt {
+	<!-- location = /ads.txt {
 		return 307 https://config.playwire.com/dyn_ads/1025372/75208/ads.txt;
-	}
+	} -->
 
 	# No cache for robots, sitemaps
 	location ~ ^/(robots|sitemap) {
@@ -69,7 +50,7 @@ server {
 
 	# Custom CSS and JS code
 	location ~ ^/(css|js)/ {
-		# No cache on dev subdomain
+		# No cache on preview subdomain
 	}
 
 	# Custom PHP scripts
@@ -107,6 +88,12 @@ server {
 	location /w/images/deleted {
 		deny all;
 	}
+
+	location /maps/ {
+        alias /var/www/dos2/maps/;
+        expires 30d;
+        add_header Cache-Control "public";
+    }
 
 	# Stupid bots keep requesting directories, triggering error logs
 	location ~ ^/w/images(/.*)?/$ {

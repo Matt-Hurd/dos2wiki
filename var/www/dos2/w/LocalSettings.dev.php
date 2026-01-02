@@ -127,7 +127,7 @@ $wgAuthenticationTokenVersion = "1";
 ## License and Creative Commons licenses are supported so far.
 $wgRightsPage = "dos2wiki:Copyrights";
 $wgRightsUrl = "";
-$wgRightsText = "CC BY-NC-SA 4.0 or CC BY-SA 4.0";
+$wgRightsText = "CC BY-SA 4.0";
 $wgRightsIcon = null;
 
 # Path to the GNU diff3 utility. Used for conflict resolution.
@@ -157,29 +157,22 @@ wfLoadExtensions([
 	"AudioButton",
 	"Cargo",
 	"CategoryTree",
-	"CheckUser",
-	"CirrusSearch",
 	"Cite",
 	"CodeEditor",
 	"CodeMirror",
 	"ConfirmEdit",
 	"ConfirmEdit/QuestyCaptcha",
-	"ContributionScores",
 	"CSS",
-	"DeleteBatch",
-	"DeleteUserPages",
 	"Details",
-	"DiscussionTools",
+	"DiscordRCFeed",
 	"Echo",
 	"Elastica",
-	"EmbedVideo",
-	"DiscordRCFeed",
+	"Gadgets",
 	"HTMLTags",
 	"ImageMap",
+	"InputBox",
 	"JsonConfig",
-	"LabeledSectionTransclusion",
-	# Incompatible with CodeMirror: https://phabricator.wikimedia.org/T300618
-	#"LinkSuggest",
+	"Kartographer",
 	"Linter",
 	"LocalVariables",
 	"Lockdown",
@@ -194,26 +187,17 @@ wfLoadExtensions([
 	"ParserFunctions",
 	"Poem",
 	"Popups",
-	"PortableInfobox",
 	"RegexFunctions",
 	"SearchDigest",
 	"SearchThumbs",
 	"Scribunto",
-	"SimpleBatchUpload",
 	"SpamBlacklist",
-	# Incompatible with recent MW versions
-	#"SyntaxHighlightThemes",
-	"SyntaxHighlight_GeSHi",
 	"TabberNeue",
 	"TemplateData",
 	"TemplateStyles",
-	"TemplateStylesExtender",
-	"TextExtracts",
 	"Theme",
 	"UserMerge",
 	"Variables",
-	# Was considered as a Cargo replacement
-	#"VisualData",
 	"VisualEditor",
 	"Widgets",
 	"WikiEditor",
@@ -260,6 +244,9 @@ $wgHooks['SkinAddFooterLinks'][] = function( $skin, $key, &$links ) {
 #
 
 function dos2wikiAdsEnabled( OutputPage $out ) {
+	# Temporarily disable ads entirely
+	return false;
+
 	$user = $out->getUser();
 	if ( $user->isRegistered() ) {
 		return false;
@@ -508,7 +495,8 @@ $wgParserCacheExpiryTime = 10 * 24 * 60 * 60;
 
 # Allow caching via reverse proxy
 # In our case this is just the Nginx FCGI cache
-$wgUseCdn = !$devSite;
+// $wgUseCdn = !$devSite;
+$wgUseCdn = true;
 $wgCdnMaxAge = 24 * 60 * 60;
 
 # Make MediaWiki send PURGE requests to Nginx
@@ -533,11 +521,11 @@ $wgInternalServer = "http://$serverName";
 # what they want to do, and let people find all our
 # pages in search results.
 #
-#$wgDefaultRobotPolicy = 'noindex,nofollow';
-#$wgNamespaceRobotPolicies[NS_MAIN] = 'index,follow';
-#$wgNamespaceRobotPolicies[NS_GUIDE] = 'index,follow';
-#$wgNamespaceRobotPolicies[NS_MODDING] = 'index,follow';
-#$wgNamespaceRobotPolicies[NS_MODS] = 'index,follow';
+$wgDefaultRobotPolicy = 'noindex,nofollow';
+$wgNamespaceRobotPolicies[NS_MAIN] = 'index,follow';
+$wgNamespaceRobotPolicies[NS_GUIDE] = 'index,follow';
+$wgNamespaceRobotPolicies[NS_MODDING] = 'index,follow';
+$wgNamespaceRobotPolicies[NS_MODS] = 'index,follow';
 
 # We're careful about spammers; no need for this
 $wgNoFollowLinks = false;
@@ -547,11 +535,11 @@ $wgNoFollowLinks = false;
 #
 
 $wgSMTP = [
-	'host' => 'ssl://smtp.gmail.com',
+	'host' => 'ssl://smtp.protonmail.ch',
 	'IDHost' => 'dos2.wiki',
-	'port' => 465,
+	'port' => 587,
 	'username' => 'no-reply@dos2.wiki',
-	'password' => $gmailAppPassword,
+	'password' => $protonmailAppPassword,
 	'auth' => true
 ];
 
@@ -657,11 +645,11 @@ $wgRateLimits['maintainer']['edit'] = [ 300, 60 ];
 $wgCaptchaClass = 'QuestyCaptcha';
 
 $wgCaptchaQuestions = [
-	"Which class plays instruments? (Log in to skip CAPTCHA.)" => "bard",
-	"Which class uses nature magic? (Log in to skip CAPTCHA.)" => "druid",
-	"Which class uses unarmed combat? (Log in to skip CAPTCHA.)" => "monk",
-	"What year was the game released? (Log in to skip CAPTCHA.)" => "2023",
-	"The second word in the game's name? (Log in to skip CAPTCHA.)" => "gate",
+	"Which race heals from poison? (Log in to skip CAPTCHA.)" => "undead",
+    "Which resource is used for powerful skills? (Log in to skip CAPTCHA.)" => "source",
+    "Which origin character is a flesh-eating elf? (Log in to skip CAPTCHA.)" => "sebille",
+	"What year was the game released? (Log in to skip CAPTCHA.)" => "2017",
+	"The second word in the game's name? (Log in to skip CAPTCHA.)" => "original",
 ];
 
 $wgCaptchaTriggers['edit']          = true;
@@ -721,30 +709,30 @@ $wgGroupPermissions['autoconfirmed']['delete-usersubpages'] = true;
 # Discord RC Feed
 #
 
-$wgRCFeeds['discord'] = [
-	'url' => $discordRCFeedWebhookUri,
-	'omit_minor' => true,
-	'omit_talk' => true,
-	'omit_namespaces' => [ NS_FILE, NS_USER, NS_MEDIAWIKI ],
-];
+// $wgRCFeeds['discord'] = [
+// 	'url' => $discordRCFeedWebhookUri,
+// 	'omit_minor' => true,
+// 	'omit_talk' => true,
+// 	'omit_namespaces' => [ NS_FILE, NS_USER, NS_MEDIAWIKI ],
+// ];
 
-$wgRCFeeds['discord_file'] = [
-	'url' => $discordRCFeedFileWebhookUri,
-	'omit_minor' => true,
-	'only_namespaces' => [ NS_FILE ],
-];
+// $wgRCFeeds['discord_file'] = [
+// 	'url' => $discordRCFeedFileWebhookUri,
+// 	'omit_minor' => true,
+// 	'only_namespaces' => [ NS_FILE ],
+// ];
 
-$wgRCFeeds['discord_talk'] = [
-	'url' => $discordRCFeedTalkWebhookUri,
-	'omit_minor' => true,
-	'only_talk' => true,
-	'omit_namespaces' => [ NS_USER_TALK ],
-];
+// $wgRCFeeds['discord_talk'] = [
+// 	'url' => $discordRCFeedTalkWebhookUri,
+// 	'omit_minor' => true,
+// 	'only_talk' => true,
+// 	'omit_namespaces' => [ NS_USER_TALK ],
+// ];
 
-$wgRCFeeds['discord_untrusted'] = [
-	'url' => $discordRCFeedUntrustedWebhookUri,
-	'omit_patrolled' => true,
-];
+// $wgRCFeeds['discord_untrusted'] = [
+// 	'url' => $discordRCFeedUntrustedWebhookUri,
+// 	'omit_patrolled' => true,
+// ];
 
 #
 # HTML Tags
@@ -906,12 +894,10 @@ $egVariablesDisabledFunctions = [ 'var_final' ];
 # WikiSEO
 #
 
-$wgGoogleSiteVerificationKey = 'AFZzz9W5H3CmDLSRstrLBj7jyuQqJCrOwX1IS01k1MA';
-
 $wgWikiSeoOverwritePageImage = true;
 
-$wgTwitterCardType = 'summary';
-$wgTwitterSiteHandle = "@dos2_wiki";
+// $wgTwitterCardType = 'summary';
+// $wgTwitterSiteHandle = "@dos2_wiki";
 
 ########################
 #                      #

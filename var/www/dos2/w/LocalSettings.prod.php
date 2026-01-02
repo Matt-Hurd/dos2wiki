@@ -127,7 +127,7 @@ $wgAuthenticationTokenVersion = "1";
 ## License and Creative Commons licenses are supported so far.
 $wgRightsPage = "dos2wiki:Copyrights";
 $wgRightsUrl = "";
-$wgRightsText = "CC BY-NC-SA 4.0 or CC BY-SA 4.0";
+$wgRightsText = "CC BY-SA 4.0";
 $wgRightsIcon = null;
 
 # Path to the GNU diff3 utility. Used for conflict resolution.
@@ -260,6 +260,9 @@ $wgHooks['SkinAddFooterLinks'][] = function( $skin, $key, &$links ) {
 #
 
 function dos2wikiAdsEnabled( OutputPage $out ) {
+	# Temporarily disable ads entirely
+	return false;
+
 	$user = $out->getUser();
 	if ( $user->isRegistered() ) {
 		return false;
@@ -547,11 +550,11 @@ $wgNoFollowLinks = false;
 #
 
 $wgSMTP = [
-	'host' => 'ssl://smtp.gmail.com',
+	'host' => 'ssl://smtp.protonmail.ch',
 	'IDHost' => 'dos2.wiki',
-	'port' => 465,
+	'port' => 587,
 	'username' => 'no-reply@dos2.wiki',
-	'password' => $gmailAppPassword,
+	'password' => $protonmailAppPassword,
 	'auth' => true
 ];
 
@@ -657,11 +660,11 @@ $wgRateLimits['maintainer']['edit'] = [ 300, 60 ];
 $wgCaptchaClass = 'QuestyCaptcha';
 
 $wgCaptchaQuestions = [
-	"Which class plays instruments? (Log in to skip CAPTCHA.)" => "bard",
-	"Which class uses nature magic? (Log in to skip CAPTCHA.)" => "druid",
-	"Which class uses unarmed combat? (Log in to skip CAPTCHA.)" => "monk",
-	"What year was the game released? (Log in to skip CAPTCHA.)" => "2023",
-	"The second word in the game's name? (Log in to skip CAPTCHA.)" => "gate",
+	"Which race heals from poison? (Log in to skip CAPTCHA.)" => "undead",
+    "Which resource is used for powerful skills? (Log in to skip CAPTCHA.)" => "source",
+    "Which origin character is a flesh-eating elf? (Log in to skip CAPTCHA.)" => "sebille",
+	"What year was the game released? (Log in to skip CAPTCHA.)" => "2017",
+	"The second word in the game's name? (Log in to skip CAPTCHA.)" => "original",
 ];
 
 $wgCaptchaTriggers['edit']          = true;
@@ -721,30 +724,30 @@ $wgGroupPermissions['autoconfirmed']['delete-usersubpages'] = true;
 # Discord RC Feed
 #
 
-$wgRCFeeds['discord'] = [
-	'url' => $discordRCFeedWebhookUri,
-	'omit_minor' => true,
-	'omit_talk' => true,
-	'omit_namespaces' => [ NS_FILE, NS_USER, NS_MEDIAWIKI ],
-];
+// $wgRCFeeds['discord'] = [
+// 	'url' => $discordRCFeedWebhookUri,
+// 	'omit_minor' => true,
+// 	'omit_talk' => true,
+// 	'omit_namespaces' => [ NS_FILE, NS_USER, NS_MEDIAWIKI ],
+// ];
 
-$wgRCFeeds['discord_file'] = [
-	'url' => $discordRCFeedFileWebhookUri,
-	'omit_minor' => true,
-	'only_namespaces' => [ NS_FILE ],
-];
+// $wgRCFeeds['discord_file'] = [
+// 	'url' => $discordRCFeedFileWebhookUri,
+// 	'omit_minor' => true,
+// 	'only_namespaces' => [ NS_FILE ],
+// ];
 
-$wgRCFeeds['discord_talk'] = [
-	'url' => $discordRCFeedTalkWebhookUri,
-	'omit_minor' => true,
-	'only_talk' => true,
-	'omit_namespaces' => [ NS_USER_TALK ],
-];
+// $wgRCFeeds['discord_talk'] = [
+// 	'url' => $discordRCFeedTalkWebhookUri,
+// 	'omit_minor' => true,
+// 	'only_talk' => true,
+// 	'omit_namespaces' => [ NS_USER_TALK ],
+// ];
 
-$wgRCFeeds['discord_untrusted'] = [
-	'url' => $discordRCFeedUntrustedWebhookUri,
-	'omit_patrolled' => true,
-];
+// $wgRCFeeds['discord_untrusted'] = [
+// 	'url' => $discordRCFeedUntrustedWebhookUri,
+// 	'omit_patrolled' => true,
+// ];
 
 #
 # HTML Tags
